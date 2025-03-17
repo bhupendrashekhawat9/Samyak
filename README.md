@@ -17,17 +17,6 @@ YuktiYojana is a goal and task tracking application helping user to achieve ther
 - **Enhanced Focus** – Prioritize work and stay on track with pinned goals.
 - **Real-time Progress Monitoring** – Track daily, weekly, and monthly progress seamlessly.
 
-## 🔧 Installation
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/YuktiYojana.git
-
-# Navigate to the project directory
-cd YuktiYojana
-
-# Install dependencies (if applicable)
-npm install  # or yarn install
-```
 
 ## 📜 License
 This project is licensed under the [MIT License](LICENSE).
