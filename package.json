@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "server": "cd ./Backend/ && npm run dev",
+    "client": "cd ./Frontend/ && npm run dev",
+    "npmclient": "cd ./Frontend/ && npm i -f",
+    "npmserver": "cd ./Backend/ && npm i -f",
+    "buildFrontend": "cd ./Frontend/ && npm run build",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "initialize": "concurrently \"npm run npmclient\" \"npm run npmserver\"",
+
+    "demo": "cd ./Backend/ && npm run server && cd ./Frontend/ && npm run dev"
+  },
+  "devDependencies": {
+  
+    "concurrently": "^8.2.2"
+  }
+}
