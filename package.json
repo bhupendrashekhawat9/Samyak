@@ -11,6 +11,7 @@
     "buildFrontend": "cd ./Frontend/ && npm run build",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "initialize": "concurrently \"npm run npmclient\" \"npm run npmserver\"",
+    "setup": "concurrently \"cd ./Frontend && npm i\" \"cd ./Backend && npm i\"",
 
     "demo": "cd ./Backend/ && npm run server && cd ./Frontend/ && npm run dev"
   },

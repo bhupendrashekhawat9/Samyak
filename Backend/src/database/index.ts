@@ -1,33 +1,28 @@
-import {Db, MongoClient} from "mongodb";
+import mongoose from "mongoose";
 
+class Database {
+  private static instance: Database | null = null;
+  private readonly url = "mongodb+srv://bittu_10:<db_password>@cluster0.zplqe.mongodb.net/Samyak?retryWrites=true&w=majority&appName=Cluster0";
 
-let db: MongoClient = new MongoClient("mongodb+srv://bittu_10:<db_password>@cluster0.zplqe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  private constructor() {}
 
-class Database{
-    
-    private  client:MongoClient;
-    private  instance: Database|null = null;
-    private static db:Db|null = null;
-    private readonly dbName = "Samyak";
-    private readonly url = "mongodb+srv://bittu_10:<db_password>@cluster0.zplqe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-    private constructor(){
-        this.client = new MongoClient(this.url)
-        this.instance =  new Database();
-        this.instance.client.connect();
-        
-
+  public static async connect(): Promise<typeof mongoose> {
+    if (!this.instance) {
+      this.instance = new Database();
+      try {
+        const connection = await mongoose.connect(this.instance.url, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        } as mongoose.ConnectOptions);
+        console.log("MongoDB Connected ✅");
+        return connection;
+      } catch (error) {
+        console.error("MongoDB Connection Error ❌:", error);
+        process.exit(1);
+      }
     }
-    private getInstance(){
-        
-    }
-    public static connect():Db{
-        if(!this.db){
-            this.getInstance()
-        }
-        return this.db 
-    }
-
+    return mongoose;
+  }
 }
 
 export default Database;
