@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@tailwind components;
+@tailwind base;
+@tailwind utilities;
+
+:root{
+    
+    font-family: "Inter",sans-serif;
+    --text-9xl:8.5rem;
+    --text-8xl:7.5rem;
+    --button-bg: red
+    --bg-layer-0:#CECECE;
+    --bg-layer-1:  #f9c74f;
+    --bg-layer-2:  hsl(0, 0%, 91%);
+    --bg-layer-3:  #f9c2ff;
+    --bg-layer-4:  #f964ff;
+
+}
+p{
+   line-height: 1.8rem; 
+   word-spacing: .1rem;
+}
+.tab-container{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+.tab{
+    @apply rounded-lg bg-amber-400 p-2 px-4
+}
+.button{
+    @apply rounded-lg bg-amber-400 p-2 px-4 
+
+}
+.card{
+    @apply rounded-2xl bg-neutral-400
+}
+
+/* { 'imperial_red': { DEFAULT: '#f94144', 100: '#3d0203', 200: '#7b0406', 300: '#b80609', 400: '#f5080c', 500: '#f94144', 600: '#fa696b', 700: '#fc8e90', 800: '#fdb4b5', 900: '#fed9da' }, 'orange_(crayola)': { DEFAULT: '#f3722c', 100: '#361503', 200: '#6c2a06', 300: '#a23f09', 400: '#d8540d', 500: '#f3722c', 600: '#f58d55', 700: '#f8aa80', 800: '#fac6aa', 900: '#fde3d5' }, 'carrot_orange': { DEFAULT: '#f8961e', 100: '#361f02', 200: '#6d3d03', 300: '#a35c05', 400: '#da7b07', 500: '#f8961e', 600: '#f9ac4d', 700: '#fbc179', 800: '#fcd5a6', 900: '#feead2' }, 'coral': { DEFAULT: '#f9844a', 100: '#3e1602', 200: '#7d2c04', 300: '#bb4206', 400: '#f7590a', 500: '#f9844a', 600: '#fa9c6d', 700: '#fcb591', 800: '#fdcdb6', 900: '#fee6da' }, 'saffron': { DEFAULT: '#f9c74f', 100: '#3f2d02', 200: '#7e5a05', 300: '#bd8607', 400: '#f6b10f', 500: '#f9c74f', 600: '#fad171', 700: '#fbdc95', 800: '#fce8b8', 900: '#fef3dc' }, 'pistachio': { DEFAULT: '#90be6d', 100: '#1d2a13', 200: '#395325', 300: '#567d38', 400: '#72a64b', 500: '#90be6d', 600: '#a7cb8c', 700: '#bdd8a8', 800: '#d3e5c5', 900: '#e9f2e2' }, 'zomp': { DEFAULT: '#43aa8b', 100: '#0d221b', 200: '#1b4337', 300: '#286552', 400: '#35866e', 500: '#43aa8b', 600: '#61c0a4', 700: '#89d0bb', 800: '#b0e0d1', 900: '#d8efe8' }, 'dark_cyan': { DEFAULT: '#4d908e', 100: '#0f1d1c', 200: '#1f3938', 300: '#2e5654', 400: '#3d7270', 500: '#4d908e', 600: '#68aeab', 700: '#8ec2c0', 800: '#b3d6d5', 900: '#d9ebea' }, 'payne's_gray': { DEFAULT: '#577590', 100: '#11171d', 200: '#222f39', 300: '#344656', 400: '#455d73', 500: '#577590', 600: '#7391ab', 700: '#96acc0', 800: '#b9c8d5', 900: '#dce3ea' }, 'cerulean': { DEFAULT: '#277da1', 100: '#081920', 200: '#103140', 300: '#174a60', 400: '#1f6380', 500: '#277da1', 600: '#37a1ce', 700: '#69b8db', 800: '#9bd0e7', 900: '#cde7f3' } }
+
+
+#f94144, #f3722c, #f8961e, #f9844a, #f9c74f, #90be6d, #43aa8b, #4d908e, #577590, #277da1 */
