@@ -17,6 +17,9 @@
     --bg-layer-4:  #f964ff;
 
 }
+*{
+    font-size: 8;
+}
 p{
    line-height: 1.8rem; 
    word-spacing: .1rem;
@@ -31,7 +34,8 @@ p{
     @apply rounded-lg bg-amber-400 p-2 px-4
 }
 .button{
-    @apply rounded-lg bg-amber-400 p-2 px-4 
+    @apply rounded-sm  p-1 text-sm cursor-pointer w-max h-max bg-gray-900  hover:bg-gray-600  border-1 border-gray-600;
+   
 
 }
 .card{

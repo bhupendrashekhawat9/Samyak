@@ -1,15 +1,12 @@
-
-import { FaGithub,FaLinkedin } from "react-icons/fa";
-import { GITHUB, LINKEDIN } from "../constants";
-import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
-import { GoTasklist } from "react-icons/go";
-import { FaNoteSticky } from "react-icons/fa6";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoMdHome } from "react-icons/io";
-import { DashboardActionElement } from "@screens/Dashboard/Dashboard";
-const container = (delay: number) => ({
-  hidden: { x: 0, opacity: 0 },
+import { FaNoteSticky } from "react-icons/fa6";
+import { GoTasklist } from "react-icons/go";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { GITHUB, LINKEDIN } from "../constants";
+const container = (delay) => ({
+  hidden: { x: -50, opacity: 0 },
   visible: {
     x: 0,
     opacity: 1,
@@ -17,71 +14,101 @@ const container = (delay: number) => ({
   },
 });
 
-interface Props{
-  actionElement:ReactNode
+const iconVariants = {
+  hover: { scale: 1.2, rotate: 5, transition: { duration: 0.2 } },
+  tap: { scale: 0.9, transition: { duration: 0.1 } }
+};
+
+interface Props {
+  actionElement: ReactNode;
 }
-const NavbarComponent = ({actionElement}:Props) => {
-  let handleRedirect = (path:string)=>{
-    let a = document.createElement("a");
-    a.href = path;
-    a.target="_blank"
-    a.click();
-  }
-  let navItems = [
+
+const NavbarComponent = ({ actionElement }: Props) => {
+
+
+  const navItems = [
     {
       name: "Home",
       path: "/",
-      iconName: <IoMdHome className="text-2xl"/>,
-      actionElement: <DashboardActionElement/>
+      iconName: <IoMdHome className="text-2xl" />,
+      bgColor: "bg-white/300",
+      actionElement: <>Dashboard Action</>
     },
     {
       name: "Notes",
       path: "/notes",
-      iconName: <FaNoteSticky className="text-2xl"/>,
-      actionElement: <></>
+      iconName: <FaNoteSticky className="text-2xl" />,
+      bgColor: "bg-white/300",
 
+      actionElement: <></>
     },
     {
       name: "Tasks",
       path: "/task",
-      iconName: <GoTasklist className="text-2xl"/>,
-      actionElement: <></>
+      iconName: <GoTasklist className="text-2xl" />,
+      bgColor: "bg-white/300",
 
+      actionElement: <></>
     },
-   
-  ]
-  let location = useLocation();
-  let currentActionElement = actionElement ? navItems.find((i)=> i.path == location.pathname)?.actionElement :<></>
+  ];
+
+
+
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const currentNavItem = navItems.find(item => item.path === currentPath);
+let navigate = useNavigate()
+  let handleRedirect = (path)=>{
+    navigate(path)
+  }
   return (
-    <nav className='flex justify-start items-center flex-col w-18 px-3 bg-neutral-300  h-screen '>
-        {/* <div>
-            <img src={logo} />
-        </div> */}
+    <div className="flex h-screen">
+      <nav className="flex flex-col justify-between items-center w-20 py-6 bg-gray-900 shadow-lg border-r border-gray-800">
+        <div className="flex flex-col items-center">
+       
+          
+          <div className="space-y-6">
+            {navItems.map((item, index) => {
+              const isActive = item.path === currentPath;
+              return (
+                <div
+                  key={item.name}
+                  // variants={container(0.2 * index)}
+                  // initial="hidden"
+                  // animate="visible"
+                  // whileHover="hover"
+                  // whileTap="tap"
+                  className="relative group"
+                >
+                  <div
+                   onClick={()=>handleRedirect(item.path)}
+                    className={`relative flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 shadow-md ${isActive ? item.bgColor : "bg-gray-800 hover:bg-gray-700"}`}
+                  >
+                    <div className={`text-white ${isActive ? "scale-110" : ""}`}>
+                      {item.iconName}
+                    </div>
+                    {isActive && (
+                      <span className="absolute -right-1 -top-1 w-3 h-3 rounded-full bg-white shadow-md"></span>
+                    )}
+                  </div>
+                  <div className="absolute left-full ml-3 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    {item.name}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
         
       
-        <div className="h-auto mt-10">
+      </nav>
+      
+      {/* Content area */}
+      {/* <div className="flex-1 bg-gray-100">
+        {currentNavItem?.actionElement}
+      </div> */}
+    </div>
+  );
+};
 
-          {
-            navItems.map((i)=>{
-              return <div className={`p-3 my-1 ${location.pathname == i.path? "hidden":"flex" } hover:bg-amber-100 rounded-2xl  flex-col justify-center items-center `}>
-                <div>
-                  {i.iconName}
-                </div>
-                 {/* <p className="font-bold" >{i.name}</p> */}
-               </div>
-            })
-          }
-
-        </div>
-        <motion.div variants={container(0.8)}
-            initial="hidden"
-            animate="visible"
-             className="flex flex-row w-auto gap-x-4">
-
-          {currentActionElement}
-        </motion.div>
-    </nav>
-  )
-}
-
-export default NavbarComponent
+export default NavbarComponent;

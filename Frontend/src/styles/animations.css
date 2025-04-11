@@ -1,0 +1,18 @@
+.leftRightShake {
+    animation: noTask 2s infinite ease-in-out;
+  }
+  
+  @keyframes noTask {
+    0% {
+      rotate: 0deg;
+    }
+    50% {
+      rotate: 20deg;
+    }
+   
+
+    100% {
+      rotate: 0deg;
+    }
+  }
+  

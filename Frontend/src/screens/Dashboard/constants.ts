@@ -1,18 +1,21 @@
 
+export let APPNAME = "Samyak";
 export type TaskType = {
-  taskName: string;
-  taskDescription: string;
-  taskStatus: "Open" | "In Progress" | "Completed";
-  taskDeadlineDate: string;
-  taskCreatedDate: string;
-  taskCreatedBy: string;
-  taskPriority: "LOW" | "MEDIUM" | "HIGH";
-  taskParentRefId: string;
-  taskAttachments: string[] | null;
-  taskCategory: "WORK" | "PERSONAL" | "HEALTH" | "OTHER";
+  taskName?: string;
+  taskDescription?: string;
+  taskStatus?: "Open" | "In Progress" | "Completed";
+  taskDeadlineDate?: string;
+  taskCreatedDate?: string;
+  taskCreatedBy?: string;
+  taskPriority?: "LOW" | "MEDIUM" | "HIGH";
+  taskParentRefId?: string;
+  taskCategory?: "WORK" | "PERSONAL" | "HEALTH" | "OTHER";
+  taskTimeSpentInSeconds?: number;
+  taskId?:string
 };
 
-export let PAGE_TITLE = "TODAYS TASK"
+export let PAGE_TITLE = (name:string)=>  `Hello ${name}, Welcome to your Dashboard`;
+export let PAGE_SUBTITLE = "Here is a summary of your tasks for today";
 
 export let TASK_DATA = {
     tasks:[

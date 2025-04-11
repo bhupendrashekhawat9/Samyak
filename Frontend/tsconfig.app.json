@@ -12,7 +12,9 @@
       "@components":["./src/components/*"],
       "@screens":["src/screens/*"],
       "@styles":["src/styles/*"],
-      "@constants":["src/constants/*"]
+      "@constants":["src/constants/*"],
+      "@utils":["src/utils/*"],
+      "@controllers":["src/controllers/*"],
 
     },
 

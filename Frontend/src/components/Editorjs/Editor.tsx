@@ -11,13 +11,13 @@ import Delimiter from "@editorjs/delimiter";
 import Marker from "@editorjs/marker";
 import InlineCode from "@editorjs/inline-code";
 import Embed from "@editorjs/embed";
+import { useTheme } from "@styles/Theme";
 
 
 let useEditor = ({
     onChange,
     data
 })=>{
-    
     let editor = useRef<EditorJS|null>(null)
     useEffect(()=>{
 
@@ -27,7 +27,8 @@ let useEditor = ({
             holder: "editorjs",
             autofocus: true,
             tools: {
-              header: Header,
+              header:  Header,
+
               list: List,
               image: {
                 class: Image,
@@ -49,7 +50,7 @@ let useEditor = ({
             },
             onChange: async (api,event) => {
                 let data = await api.saver.save();
-                console.log(data)
+                
                 onChange(data)
             },
 
@@ -85,10 +86,14 @@ let handleOnChange = (data)=>{
 //     };
 //   }, []);
   console.log(content,"content")
+  let {theme} = useTheme()
+
   return (
-    <div className="p-4 overflow-auto border border-gray-300 rounded" style={{height:"50vh"}}>
+    <div className="p-4 overflow-auto rounded h-full">
       {/* Editor.js Container */}
-      <div id="editorjs" className=""></div>
+      <div id="editorjs" className="text-black" style={{
+        // color:theme["text-color"]
+      }}></div>
 
      
     </div>
