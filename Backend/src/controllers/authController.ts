@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
-import { errorResponse } from "../utils/responseHandler";
-import { NextFunction, Request, Response } from "express";
-import { getUserByEmail } from "../database/models/UsersAuth";
+import { errorResponse } from "../utils/responseHandler.js";
+import type { NextFunction, Request, Response } from "express";
+import { getUserByEmail } from "../database/models/UsersAuthModel.js";
 
 interface UserPayload {
     userEmail: string;
     userId?: string;
+    password: string;
 }
 
 const JWT_SECRET = process.env.JWT_SECRET||"SECRET";
@@ -31,14 +32,16 @@ export const verifyToken = (token: string): UserPayload => {
 export const AuthMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const token = req.headers.authorization;
     if(!token || !token.startsWith("Bearer ")){
-        return res.status(401).json(errorResponse("Unauthorized"));
+         res.status(401).json(errorResponse("Unauthorized"));
+         return;
     }
     try {
         const tokenString = token.split(" ")[1];
         const decoded = verifyToken(tokenString);
-        req.user = decoded;
+        // req.user = decoded;
         next();
     } catch (error) {
-        return res.status(401).json(errorResponse("Invalid token"));
+            res.status(401).json(errorResponse("Invalid token"));
+        return;
     }
 }

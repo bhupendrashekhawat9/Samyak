@@ -1,25 +1,16 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
-        "outDir": "./dist",
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": false, // For development, change to false for production
-        "allowSyntheticDefaultImports": true,
-        "rootDir": "./src"
+      "target": "ES2020",
+      "module": "ES6",                     // ✅ changed from NodeNext
+      "moduleResolution": "node",         // ✅ still okay with Node ESM
+      "outDir": "./dist",
+      "esModuleInterop": true,
+      "allowJs": true,
+      "types": ["node"],
+      "skipLibCheck": true,
+
     },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ],
-    "include": [
-    
-        "src/**/*.ts" // Include all TypeScript files in the src directory and its subdirectories
-       
-    ]
-}
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
+  

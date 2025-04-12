@@ -1,6 +1,7 @@
 import mongoose, { Model } from "mongoose";
-import Database from "..";
-import { TaskType } from "../../types/tasks";
+
+import type { TaskType } from "../../types/tasks.js";
+import Database from "../index.js";
 
 
 let Schema = mongoose.Schema;
@@ -51,7 +52,7 @@ let taskSchema = new Schema({
         required: false
     },
 });
-let TaskModel: Model<TaskType> = mongoose.model("tasks", taskSchema);
+let TaskModel= mongoose.model("tasks", taskSchema);
 export default TaskModel;
 
 

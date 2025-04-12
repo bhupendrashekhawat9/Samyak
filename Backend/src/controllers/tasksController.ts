@@ -1,15 +1,16 @@
-import Database from "../database";
-import { saveTask,fetchAllTasks, getSingleTask, updateTask, deleteTask } from "../database/models/Tasks";
-import { TaskType } from "../types/tasks";
 
-let taskResponse = (data:TaskType)=>{
+import type { Request, Response } from "express";
+import { saveTask,fetchAllTasks, getSingleTask, updateTask, deleteTask } from "../database/models/TasksModel.js";
+import type { TaskType } from "../types/tasks.js";
+
+let taskResponse = (data:Object)=>{
     return {
         status: 200,
         message: "Task Created Successfully",
         data: data,
     }
 }
-export async function handleGetTaskById (req,res){
+export async function handleGetTaskById (req:Request,res:Response){
     let id = req.query.id as string;
     try{
         let tasks = await getSingleTask(id)
@@ -28,7 +29,7 @@ export async function handleGetTaskById (req,res){
         })
     }
 }
-export async function handleGetAllTasks (req,res){
+export async function handleGetAllTasks (req:Request,res:Response){
 
     try{
         let tasks = await fetchAllTasks()
@@ -47,9 +48,9 @@ export async function handleGetAllTasks (req,res){
         })
     }
 }
-export async function handleCreateTask (req:Express.Request,res:Express.Response){
+export async function handleCreateTask (req:Request,res:Response){
 
-    let data = req.body;
+    let data = req.body as TaskType;
     try{
         console.log("Creating Task with data:", data);
     let response = await saveTask(data) as TaskType;
@@ -62,38 +63,49 @@ export async function handleCreateTask (req:Express.Request,res:Express.Response
 
 
 }
-export async function handleUpdateTask (req:Express.Request,res:Express.Response){
+export async function handleUpdateTask (req:Request,res:Response){
 
     let data = req.body as TaskType;
     let id = req.query.id as string;
     try{
     console.log("Updating Task");
     let response = await updateTask(id,data);
-    res.status(200).json(taskResponse(response));
+    if(response){
+        res.status(200).json(taskResponse(response));
+    }else{
+        res.status(500).json(taskResponse({}));
+    }
     } catch (error) {
+        res.status(500).json(taskResponse({}));
+
         console.error("Error Updating Task ❌:", error);
     }
     console.log("Task Updated Successfully ✅:");
 
 }
-export async function handleUpdateTaskDate (req:Express.Request,res:Express.Response){
+export async function handleUpdateTaskDate (req:Request,res:Response){
 
-    let {date,id} = req.query;
+    let {id} = req.query;
+    let date  = req.query.date as string
     try{
     console.log("Updating Task");
-    let response = await updateTask(id,{taskDeadlineDate:date});
-    res.status(200).json(taskResponse(response));
+    let response = await updateTask(id as string,{taskDeadlineDate:date});
+    if(response){
+        res.status(200).json(taskResponse(response));
+    }else{
+        res.status(500).json(taskResponse({}));
+    }
     } catch (error) {
         console.error("Error Updating Task ❌:", error);
     }
     console.log("Task Updated Successfully ✅:");
 
 }
-export async function handleDEleteTask (req:Express.Request,res:Express.Response){
+export async function handleDEleteTask (req:Request,res:Response){
     try{
 
         let {id} = req.query;
-        let response =  await deleteTask(id);
+        let response =  await deleteTask(id as string);
         if(response){
             res.status(200).json({message: "Task Deleted SUccessfully", code:1})
             return;

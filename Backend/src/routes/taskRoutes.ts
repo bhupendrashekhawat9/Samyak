@@ -1,5 +1,5 @@
 import express  from 'express';
-import { handleCreateTask, handleDEleteTask, handleGetAllTasks, handleGetTaskById, handleUpdateTask, handleUpdateTaskDate } from '../controllers/tasks';
+import { handleCreateTask, handleDEleteTask, handleGetAllTasks, handleGetTaskById, handleUpdateTask, handleUpdateTaskDate } from '../controllers/tasksController.js';
 let route = express.Router();
 
 

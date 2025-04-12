@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getUserByEmail, registerUser } from "../database/models/UsersAuth";
-import { successResponse, errorResponse } from "../utils/responseHandler";
-import { generateToken } from "../controllers/auth";
+import { getUserByEmail, registerUser } from "../database/models/UsersAuthModel.js";
+import { successResponse, errorResponse } from "../utils/responseHandler.js";
+import { generateToken } from "../controllers/authController.js";
 
 const router = Router();
 
@@ -24,6 +24,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     const { userEmail, userPassword } = req.body;
+
     try {
         console.log("User Email:", userEmail);
         console.log("User Password:", userPassword);

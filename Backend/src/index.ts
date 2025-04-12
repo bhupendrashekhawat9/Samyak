@@ -1,9 +1,9 @@
 import express from "express"
-import taskRouter from "./src/routes/task"
+import taskRouter from "./routes/taskRoutes.js"
 import cors from "cors"
-import Database from "./src/database"
-import userAuthRouter from "./src/routes/userAuth"
-import { AuthMiddleware } from "./src/controllers/auth"
+
+import userAuthRouter from "./routes/userAuthRoutes.js"
+import { AuthMiddleware } from "./controllers/authController.js"
 const app = express()
 const PORT = 9000;
 let corsOptions = {

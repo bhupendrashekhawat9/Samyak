@@ -2,11 +2,15 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
+  "main": "dist/index.cjs",          
+  "bin": "dist/index.cjs", 
   "scripts": {
     "server": "npx nodemon ./src/index.ts",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'tsx' index.ts"
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'tsx' ./src/index.ts",
+    "runBuild": "cd dist && node index.js",
+    "build": "node ./build.js",
+    "package": "npm run build && pkg -t node18-linux-x64,node18-macos-x64,node18-win-x64,node18-linux-arm64,node18-macos-arm64,node18-win-arm64 ./dist/index.js --out-dir ./dist/pkg"
   },
   "author": "",
   "license": "ISC",
@@ -32,14 +36,17 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.9",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.0.2",
     "@types/node-cron": "^3.0.11",
     "@types/uuid": "^10.0.0",
+    "esbuild": "^0.25.2",
     "express": "^4.19.2",
+    "pkg": "^5.8.1",
     "ts-node": "^10.9.2",
+    "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.19.3",
     "typescript": "^5.5.4"
   }
