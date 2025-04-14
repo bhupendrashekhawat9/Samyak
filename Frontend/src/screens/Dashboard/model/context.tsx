@@ -36,14 +36,14 @@ export let DashboardStoreProvider = ({children}: {children:ReactNode})=>{
             }))
         },
         fetchAllTask:async ()=>{
-            let tasks: TaskType[]  = await fetchAllTasks() as TaskType[];
-            let data = tasks.data??[]
+            let tasks = await fetchAllTasks();
+            let data:TaskType[]  = tasks.data??[]
             setState(prev=>({
                 ...prev,
                 tasks:data
             }))
         },
-        setTasks:(input:ContextProps["methods"]["updateTask"])=>{
+        setTasks:(input:(prev:TaskType[])=>TaskType[])=>{
                 setState((prev)=>{
                     return {
                         ...prev,

@@ -3,11 +3,12 @@ import { TaskType } from '../constants'
 import { useDashboardStore } from '../model/context'
 import { TaskDragActionContextProps, useTaskDragAction } from '@components/TaskDragAction';
 import { formatDate, getPriorityColor, getStatusColor } from '../utilFunctions';
-import { FaPlay, FaPause } from "react-icons/fa";
+import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { deleteTask, updateTask, updateTaskDate, updateTaskStatus } from '../../../controllers/tasks';
 import { useTheme } from '@styles/Theme';
 import { FiDelete } from 'react-icons/fi';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdNotes } from 'react-icons/md';
+import { TiTick } from 'react-icons/ti';
 
 
 const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
@@ -21,7 +22,7 @@ const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
     e.dataTransfer.setData("task", JSON.stringify(task))
   }
   
-  let handleDragEnd = (e) => {
+  let handleDragEnd = () => {
     taskDragAction.methods.close()
   }
   
@@ -33,7 +34,7 @@ const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
           updateTask(task.taskId, {
             ...task,
             taskStatus: "Completed",
-            taskTimeSpent: timer + 1
+            taskTimeSpentInSeconds: timer + 1
           })
           taskDragAction.methods.close()
         }
@@ -73,27 +74,28 @@ const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
     dashboardStore.methods.openTaskNotes()
   }
   console.log(theme,"theme")
-  
+  let handleContinueLater = () => {
+    
+    dashboardStore.methods.setCurrentTask(null)
+  }
   return (
     <div 
       draggable 
       onDragEnd={handleDragEnd} 
       onDragStart={handleDragStart} 
-      className={`ml-2 rounded-lg p-4 w-full flex flex-col justify-between h-auto `}
-      style={{
-        backgroundColor:theme["bg-layer-2"]
-      }}
+      className={`ml-2 rounded-lg p-4 w-full flex flex-col justify-between h-auto ${theme["layer-3"]} `}
+     
     >
       <div className={`flex justify-between flex-row gap-10 w-full `}>
 
         <div className="flex-1">
-          <h3 className={`font-semibold text-lg ${theme["bg-layer-1"]} ${theme["text-color"]}`}>
+          <h3 className={`font-semibold text-xl capitalize rounded-lg w-max text-black`}>
             {task.taskName}
           </h3>
-          <p className={`text-sm font-light mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className={`text-sm  mb-2 text-neutral-800 font-bold`}>
             {task.taskDescription}
           </p>
-          <p className={`text-xs ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className={`text-xs`}>
             Due: {formatDate(task.taskDeadlineDate)}
           </p>
         </div>
@@ -106,19 +108,30 @@ const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
           </span>
         </div>
       </div>
-        <div className='button text-sm' onClick={handleOpenNotes}>
-           {dashboardStore.state.isNotesVisible ? "Close Notes" : "View Notes"}
-          </div>
+      <div className='flex flex-row justify-between h-max items-end'>
+
       <div className='flex flex-row justify-start  items-center mt-8'>
-        <div onClick={handleMarkTaskComplete} className='button mr-2'>
-        
-            Complete
+        <div onClick={handleMarkTaskComplete} className=' hover:bg-white/30 cursor-pointer mr-2 flex flex-row items-center gap-2 font-medium text-sm text-black border-1 border-green-800 rounded-lg px-2'>
+          <TiTick/>
+            <p>I have completed this task</p>
           
         </div>
-        <div className='button' onClick={handleDeleteTask}>
-          <MdDelete className='text-red-800 text-lg'/>
+        <div onClick={handleContinueLater} className=' hover:bg-white/30 cursor-pointer mr-2 flex flex-row items-center gap-2 font-medium text-sm text-black border-1 border-green-800 rounded-lg px-2'>
+          <FaStop/>
+            <p>Continue later</p>
+          
+        </div>
+        <div className=' hover:bg-white/30 cursor-pointer flex flex-row items-center gap-2 font-medium text-sm text-black border-1 border-red-800 rounded-lg px-2  h-max' onClick={handleDeleteTask}>
+          <MdDelete className='text-red-800 text-sm'/>
+          <p>Delete</p>
           </div>
       </div>
+      <div className='mr-2 h-max flex flex-row items-center gap-2 font-medium text-sm text-black hover:bg-white/30 cursor-pointer w-max rounded-lg px-2 py-1' onClick={handleOpenNotes}>
+          <MdNotes/>
+           {dashboardStore.state.isNotesVisible ? "Close Notes" : "View/Edit Notes"}
+      </div>
+      </div>
+
     </div>
   )
 }
@@ -166,11 +179,11 @@ const Timer = ({timer, setTimer}: {timer: number, setTimer: any}) => {
   };
 
   return (
-    <div className={`p-6 h-full w-full flex flex-col items-center ${theme["bg-layer-3"]} ${theme["text-color"]}`}>
+    <div className={`p-6 h-full w-full flex flex-col items-center bg-white/20`}>
       <div className="flex flex-col items-center gap-8">
         <div className="flex flex-col items-center">
-          <p className={`text-xs mb-1 ${theme["bg-layer-1"]} ${theme["text-color-dark"]} font-bold`}>Time taken</p>
-          <p className={`font-bold ${theme["bg-layer-3"]} ${theme["text-color"]}`}>{formatTime(timer)}</p>
+          <p className={`text-xs mb-1  font-bold`}>Time taken</p>
+          <p className={`font-bold `}>{formatTime(timer)}</p>
         </div>
         
         <button 
@@ -181,7 +194,7 @@ const Timer = ({timer, setTimer}: {timer: number, setTimer: any}) => {
         </button>
       </div>
     </div>
-  );
+  );  
 };
 
 const WorkingTask = () => {
@@ -197,17 +210,17 @@ const WorkingTask = () => {
   }, [task]);
 
   return (
-    <div className={`flex flex-col ${theme["text-color"]} ${theme["bg-layer-1"]} rounded-lg  h-full w-full`}>
+    <div className={`flex flex-col  rounded-lg  h-full w-full `}>
       {task && (
-        <div className={`flex flex-row  rounded-lg mr-4`}>
-          <div className='card h-60 w-60 rounded-lg overflow-hidden'>
+        <div className={`grid grid-cols-[1fr_6fr] bg-white/30 rounded-lg `}>
+          
             <Timer timer={timer} setTimer={setTimer} />
-          </div>
+       
           <ViewTask task={task} timer={timer} />
         </div>
       )}
       {!task && (
-        <div className={`p-4 text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+        <div className={`p-4 text-center `} style= {{color: theme["text-color"]}}>
           No task currently selected
         </div>
       )}

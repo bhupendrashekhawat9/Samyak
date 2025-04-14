@@ -35,7 +35,7 @@ const SideActionDrawer = () => {
   return (
     <div>
       <AISummary />
-      <VoiceAssistant/>
+      {/* <VoiceAssistant/> */}
        {
         getContent()
        }

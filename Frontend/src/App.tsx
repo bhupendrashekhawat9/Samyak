@@ -11,7 +11,7 @@ const App = () => {
 
    <div className="w-full max-h-screen relative flex flex-column  " >
     
-    <NavbarComponent actionElement={<></>}/>
+    {/* <NavbarComponent actionElement={<></>}/> */}
       <div className='w-full max-h-full overflow-auto' >
       <Router/>
       </div>

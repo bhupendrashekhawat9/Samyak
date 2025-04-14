@@ -7,24 +7,47 @@ import { jwtDecode } from 'jwt-decode';
 
 
 let ctx = React.createContext<loginAuthContextType>({
-    methods: {},
-    state: {}
+    methods: {
+        register: async() => {
+            return null
+        },
+        checkIsLoggedIn: async() => {
+            return false
+        },
+        logout: async() => {
+            return null
+        },
+        login: async() => {
+            return null
+        },
+        loginGoogle: async() => {
+            return null
+        },
+        loginGitHub: async() => {
+            return null
+        }
+    },
+    state: {
+        userDetails: null
+    }
 })
-
+interface UserDetails {
+    userName?: string;
+    token?: string;
+    userEmail: string;
+    userId?:string,
+    password?:string
+}
 interface loginAuthState {
-    userDetails: {
-        name: string;
-        id: string;
-        token: string;
-        emailId: string;
-    } | null
+    userDetails: UserDetails | null
 }
 interface loginAuthMethods {
     checkIsLoggedIn: () => void;
     logout: () => void;
-    login: (email: string, password: string) => void;
-    loginGoogle: () => void;
-    loginGitHub: () => void;
+    login: (creds:UserDetails) => Promise<UserDetails>;
+    loginGoogle: () => Promise<UserDetails>|null    ;
+    loginGitHub: () => Promise<UserDetails>|null;
+    register: (user:UserDetails)=>Promise<UserDetails>|null
 }
 export interface loginAuthContextType {
     state: loginAuthState;
@@ -36,14 +59,19 @@ const LoginAuthProvider = ({ children }: { children: React.ReactNode }) => {
         userDetails: null
     })
 
-    let methods = {
+    let methods: loginAuthMethods = {
         checkIsLoggedIn: () => {
+            
             let sessionToken = localStorage.getItem("token")
-            if (sessionToken) {
-                let userDetails = jwtDecode(sessionToken);
+            if (sessionToken && sessionToken != "undefined") {
+                
+                let userDetails:UserDetails = jwtDecode(sessionToken??"");
                 setState(prev=>({
                     ...prev,
-                    userDetails
+                    userDetails:{
+                        ...userDetails,
+                        userEmail:userDetails.userEmail
+                    } as UserDetails
                 }))
                 return true
             }
@@ -56,13 +84,34 @@ const LoginAuthProvider = ({ children }: { children: React.ReactNode }) => {
             })
             localStorage.removeItem("token")
         },
-        login: async (creds: { email: string, password: string } | null | undefined) => {
+        register: async(user)=> {
+            
+            try{
+                let response = await DoAjax.post("/userAuth/register").payload({
+                    userEmail: user.userEmail,
+                    userPassword: user.password,
+                    userName: user.userName
+                }).exec()
+                if(response.status==200){
+                    localStorage.setItem("token", response.data.token)
+                    setState({
+                        ...state,
+                        userDetails: response.data
+                    })
+                }
+                return response
+            }catch(e){
+                console.log("User Registration failed"+" "+e)
+            }
+            return null
+        },
+        login: async (creds ) => {
             try {
                 if (!creds) {
                     return;
                 }
                 let response = await DoAjax.post("/userAuth/login").payload({
-                    userEmail: creds.email,
+                    userEmail: creds.userEmail,
                     userPassword: creds.password
                 }).exec()
 
@@ -72,16 +121,22 @@ const LoginAuthProvider = ({ children }: { children: React.ReactNode }) => {
                         ...state,
                         userDetails: response.data
                     })
+                    return response.data
+                }else{
+                    alert(response.message)
                 }
+                return {}
+                
             } catch (error) {
                 console.log("Error Logging in ❌:", error);
+                return null
             }
         },
-        loginGoogle: () => {
-
+        loginGoogle: async() => {
+            return null
         },
-        loginGitHub: () => {
-
+        loginGitHub: async() => {
+            return null
         }
     }
     useEffect(() => {

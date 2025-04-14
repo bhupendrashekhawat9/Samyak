@@ -23,7 +23,7 @@ interface Props {
   actionElement: ReactNode;
 }
 
-const NavbarComponent = ({ actionElement }: Props) => {
+const NavbarComponent = ({  }: Props) => {
 
 
   const navItems = [
@@ -72,7 +72,7 @@ let navigate = useNavigate()
               const isActive = item.path === currentPath;
               return (
                 <div
-                  key={item.name}
+                  key={index}
                   // variants={container(0.2 * index)}
                   // initial="hidden"
                   // animate="visible"

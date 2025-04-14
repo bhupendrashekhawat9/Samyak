@@ -1,6 +1,7 @@
 
 export default class DoAjax {
-    private baseUrl = "/api/v1";
+    private hostUrl = "https://samyak-50pp.onrender.com/"
+    private baseUrl = this.hostUrl+"api/v1";
     private url: string;
     private header  = {
         "Content-Type": "application/json",
@@ -18,7 +19,7 @@ export default class DoAjax {
 
     private  setToken(){
         let sessionToken = localStorage.getItem("token")
-        if(sessionToken){
+        if(sessionToken && sessionToken != "undefined"){
             this.header.Authorization = `Bearer ${sessionToken}`
         }
     }
@@ -29,8 +30,8 @@ export default class DoAjax {
             headers: this.header,
             body: this.body,
         })
-        if(res.status === 401){
-            // localStorage.removeItem("token")
+        if(res.status === 401 ){
+            localStorage.removeItem("token")
             // window.location.href = "/login"
         }
         return await res.json()
@@ -43,7 +44,7 @@ export default class DoAjax {
         this.header = { ...this.header, ...header };
         return this;
     }
-    setMethod(method: string) {
+    setMethod(method: 'GET' | 'POST' | 'PUT' | 'DELETE') {
         this.method = method;
         return this;
     }

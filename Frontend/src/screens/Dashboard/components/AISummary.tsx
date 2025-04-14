@@ -12,7 +12,7 @@ const AISummary = () => {
     const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
     
     const urgentTasks = tasks.filter(task => 
-      task.taskPriority === "High" && task.taskStatus !== "Completed"
+      task.taskPriority === "HIGH" && task.taskStatus !== "Completed"
     ).length;
     
     // Get today's tasks

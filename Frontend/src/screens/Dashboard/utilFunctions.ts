@@ -1,3 +1,4 @@
+import moment from "moment";
 import { TaskType } from "./constants";
 
 const today = new Date();
@@ -41,10 +42,10 @@ tomorrow.setDate(tomorrow.getDate() + 1);
     };
    export const getTaskBGColor = (status) => {
       switch (status) {
-        case 'LOW': return 'bg-green-900';
-        case 'HIGH': return 'bg-red-900';
-        case 'MEDIUM': return 'bg-blue-900';
-        default: return 'bg-gray-900';
+        case 'LOW': return 'bg-green-400';
+        case 'HIGH': return 'bg-orange-600';
+        case 'MEDIUM': return 'bg-blue-600';
+        default: return 'bg-gray-400';
       }
     };
     // Format date to readable string
@@ -141,8 +142,32 @@ tomorrow.setDate(tomorrow.getDate() + 1);
         return acc;
       }, {} as Record<string, TaskType[]>);
     };
+    export const getSelectedWeek = (date?:Date)=>{
+      let currentDate = moment(date)
+      let weekStart = currentDate.startOf("week")
+      return {
+        startDate: new Date(weekStart.toISOString()),
+        endDate: new Date(weekStart.add(6,"days").toISOString())
+      }
+
+    }
+    export let getWeekDays = (startDate:Date,endDate:Date)=>{
+        let weekDays: {name:string,date:Date}[] = [];
+        
+        let start = moment(getSelectedWeek(startDate).startDate)
+        let end = moment(start).add(6,"days")
     
-    export let groupByWeekDays = (tasks: TaskType[]) => {
+        while(start.isSameOrBefore(end)){
+          weekDays.push({
+            name:start.format("dddd")+" "+start.date(),
+            date:new Date(start.toISOString())
+          })
+          start.add(1,"day")
+        }
+        return weekDays
+        
+      }
+    export let groupByWeekDays = (tasks: TaskType[],startDate:Date,endDate:Date) => {
       // Get current date for the weekly view
       const currentDate = new Date();
       const dayOfWeek = currentDate.getDay();
@@ -151,14 +176,8 @@ tomorrow.setDate(tomorrow.getDate() + 1);
       monday.setDate(currentDate.getDate() + mondayOffset);
     
       // Generate weekday headers
-      const weekdays: { name: string, date: Date }[] = [];
-      for (let i = 0; i < 5; i++) {
-        const day = new Date(monday);
-        day.setDate(monday.getDate() + i);
-        const dayName = day.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
-        const dayNum = day.getDate();
-        weekdays.push({ name: `${dayName} ${dayNum}`, date: day });
-      }
+      let weekdays: { name: string, date: Date }[] = getWeekDays(startDate,endDate)
+
       const tasksByDay = {};
       weekdays.forEach(day => {
         tasksByDay[day.name] = [];
@@ -168,7 +187,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
     
         const taskDate = new Date(task.taskDeadlineDate);
     
-        const dayName = taskDate.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
+        const dayName = moment(taskDate).format("dddd");
         const dayNum = taskDate.getDate();
         const dayKey = `${dayName} ${dayNum}`;
     
@@ -184,7 +203,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
     export const getTimeBasedBackgroundImage = (): string => {
       const hour = new Date().getHours();
-    
+      return "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop"
       // Early Morning (5 AM - 8 AM)
       if (hour >= 5 && hour < 8) {
         return "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop";

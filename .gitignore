@@ -20,7 +20,7 @@ package-lock.json
 dist
 dist-ssr
 *.local
-
+.venv
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

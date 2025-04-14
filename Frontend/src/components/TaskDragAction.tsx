@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, DragEventHandler, useCallback, useRef, useEffect } from "react";
-import { TaskType } from "screens/Dashboard/constants";
+import { TaskType } from "@screens/Dashboard/constants";
 
 // Define the shape of the context
 interface DragState {
@@ -15,10 +15,10 @@ export interface TaskDragActionContextProps {
         onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
         open: () => void;
         close: () => void;
-        setDragActions: React.Dispatch<React.SetStateAction<TaskDragAction[]>>;
+        setDragActions: (task:TaskDragAction[])=>void;
     };
 }
-type TaskDragAction = { title: "Completed" | "In Progress" | "Delete", onDrop: (task: TaskType) => void, color?: string };
+export type TaskDragAction = { title: string, onDrop: (task: TaskType) => boolean|void, color?: string };
 interface props {
 
     children: ReactNode;
@@ -53,6 +53,7 @@ const TaskDragActionProvider: React.FC<TaskDragActionProps> = ({ children }: pro
     let handleDrop = (e: React.DragEvent<HTMLElement>) => {
         try {
             
+            
             let task = (e.dataTransfer.getData("task"))
             close()
             if (
@@ -60,7 +61,8 @@ const TaskDragActionProvider: React.FC<TaskDragActionProps> = ({ children }: pro
             ) {
 
 
-                if (task != JSON.stringify(state.draggedTask)) {
+                if ( task != null) {
+                    
                     setState(prev => ({ ...prev, draggedTask: JSON.parse(task) }))
                 }
             }
@@ -74,10 +76,10 @@ const TaskDragActionProvider: React.FC<TaskDragActionProps> = ({ children }: pro
     let sections: TaskDragAction[] = dragActions.length > 0 ? dragActions : []
 
     let methods = useRef<TaskDragActionContextProps["methods"]>({
-        onDrop: (e) => null,
+        onDrop: () => null,
         open: () => setState((prev) => ({ ...prev, open: true })),
         close: () => setState((prev) => ({ ...prev, open: false })),
-        setDragActions: setDragActions
+        setDragActions: (val)=> {setDragActions(val)}
     })
     let handleKeydown = (e: React.KeyboardEvent) => {
         if (e.key == "Escape") {

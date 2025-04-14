@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from "path"
+import tsconfigpaths from "vite-tsconfig-paths"
+console.log(path.resolve(__dirname,"src/screens"))
 // https://vite.dev/config/
 export default defineConfig({
   server:{
@@ -9,10 +11,16 @@ export default defineConfig({
       '/api/v1': "http://localhost:9000",
     }
   },
-  plugins: [react(),tailwindcss()],
+  plugins: [react(),tailwindcss(),tsconfigpaths()],
+  build:{
+    rollupOptions:{
+      treeshake:true
+    }
+  },
   resolve:{
+    
     alias:{
-      "@assets": path.resolve(__dirname,"/src/assets"),
+      "@assets": path.resolve(__dirname,"src/assets"),
       "@components": path.resolve(__dirname,"/src/components"),
       "@styles": path.resolve(__dirname,"src/styles"),
       "@screens": path.resolve(__dirname,"src/screens"),

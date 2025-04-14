@@ -6,13 +6,16 @@ import { useNavigate } from "react-router-dom";
 import WorkingTask from "./components/WorkingTask";
 import TaskOverview from "./components/TaskOverview";
 import { useDashboardStore } from "./model/context";
-import { TaskDragActionContextProps } from "components/TaskDragAction";
+import { TaskDragActionContextProps } from "@components/TaskDragAction";
 import SideActionDrawer from "./components/SideActionDrawer";
 import { NotesEditor } from "@components/Editorjs";
 import { useTheme } from "../../styles/Theme";
 import { FiClock, FiCalendar, FiCheckSquare, FiAlertCircle, FiActivity, FiBarChart2 } from "react-icons/fi";
 import { getTimeBasedBackgroundImage } from "./utilFunctions";
 import { useLoginAuth } from "@contextProviders/LoginAuthProvider";
+import { Calender } from "@components/Calender";
+import { getNotesByRefId, saveNote } from "@controllers/notesControllers";
+import { useDebounce } from "@utils/hooks";
 
 // AI Summary component
 
@@ -25,7 +28,7 @@ const Dashboard = () => {
   let taskDragAction = useTaskDragAction() as TaskDragActionContextProps;
   let todos = dashboardStore.state.tasks;
   let currentWorkingTask = taskDragAction.state.draggedTask as TaskType;
-  
+
   useEffect(() => {
     if (currentWorkingTask) {
       dashboardStore.methods.updateActiveTask(currentWorkingTask);
@@ -33,33 +36,50 @@ const Dashboard = () => {
   }, [currentWorkingTask]);
 
   const [notes, setNotes] = useState(null);
-  const onNotesChange = (data) => {
+  const onNotesChange = useDebounce((data) => {
     setNotes(data);
-  };
+    let notesPayload = {
+      noteBody: data,
+      noteRefId: dashboardStore.state.currentWorkingTask?.taskId ?? "",
+    }
+    saveNote(notesPayload)
+  }, 9000);
 
   // Get today's date formatted nicely
   const getTodayFormatted = () => {
-    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    const options = { weekday: 'long', month: 'long', day: 'numeric' } as const;
     return new Date().toLocaleDateString('en-US', options);
   };
-  let userName= loginAuth.state.userDetails?.email.split("@")[0]
+  let userName = loginAuth.state.userDetails.userName
+  let fetchNotes = async () => {
+    let notes = await getNotesByRefId(dashboardStore.state.currentWorkingTask?.taskId ?? "")
+    setNotes(notes?.noteBody ?? null)
+  }
 
+  useEffect(() => {
+    fetchNotes()
+  }, [dashboardStore.state.currentWorkingTask])
+  console.log(dashboardStore.state.currentWorkingTask, "notes")
   return (
     <div
       className="min-h-screen"
       style={{
         // backgroundColor: theme["bg-layer-1"],
-        backgroundRepeat:"no-repeat",
-        backgroundSize:"cover",
-        backgroundPosition:"center",
-        
-    background: `url(${getTimeBasedBackgroundImage()})`,
-   
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundImage: `url(${getTimeBasedBackgroundImage()})`,
+      
+        backgroundAttachment: "fixed",
+     
+        backgroundBlendMode: "overlay",
+        backdropFilter: "blur(10px)",
         color: theme["text-color"],
+        
       }}
     >
       <div>
-      
+
       </div>
       <div className="flex flex-row h-screen">
         <div className="w-8/10 p-6 overflow-y-auto">
@@ -76,8 +96,8 @@ const Dashboard = () => {
 
           {!dashboardStore.state.currentWorkingTask && (
             <>
-             
-              
+
+
               <div className="mb-6">
                 <div className="flex items-center mb-4">
                   <FiClock className="text-xl mr-2" style={{ color: theme["accent-color"] }} />
@@ -91,16 +111,16 @@ const Dashboard = () => {
           )}
 
           {dashboardStore.state.currentWorkingTask && (
-            <div className="mb-6">
+            <div className="mb-6 ">
               <WorkingTask />
             </div>
           )}
 
           {dashboardStore.state.isNotesVisible ? (
             <div
-              className="w-full rounded-xl p-4 bg-white/30 overflow-auto"
+              className="w-full rounded-xl p-4 bg-white/80 h-[96vh] overflow-auto"
               style={{
-                
+
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)"
               }}
             >
@@ -129,11 +149,11 @@ const Dashboard = () => {
 export const DashboardActionElement = () => {
   const { theme } = useTheme();
   let navigate = useNavigate();
-  
+
   const handleOpenCreateTask = () => {
     navigate("/createTask");
   };
-  
+
   return (
     <button
       onClick={handleOpenCreateTask}

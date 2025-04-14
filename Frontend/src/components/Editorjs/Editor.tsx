@@ -48,7 +48,7 @@ let useEditor = ({
               inlineCode: InlineCode,
               embed: Embed,
             },
-            onChange: async (api,event) => {
+            onChange: async (api) => {
                 let data = await api.saver.save();
                 
                 onChange(data)
@@ -61,7 +61,7 @@ let useEditor = ({
     },[])
       return editor
 }
-const Editor: React.FC = ({onChange, data}) => {
+const Editor: React.FC<{onChange: (data: OutputData) => void, data: OutputData, onSave: (data: OutputData) => void}> = ({onChange, data}) => {
 
 
 let handleOnChange = (data)=>{
@@ -72,21 +72,6 @@ let handleOnChange = (data)=>{
   const editor = useEditor({onChange:handleOnChange,data});
   const [content, setContent] = useState<OutputData | null>(null);
 
-//   useEffect(() => {
-//       if (!editorRef.current) {
-//        debugger
-//       editorRef.current = 
-//     }
-
-//     return () => {
-//         if(editorRef.current){
-
-//             editorRef.current = null;
-//         }
-//     };
-//   }, []);
-  console.log(content,"content")
-  let {theme} = useTheme()
 
   return (
     <div className="p-4 overflow-auto rounded h-full">

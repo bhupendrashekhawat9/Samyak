@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { TASK_DATA, TaskType } from '../constants'
+import React, { useEffect, useMemo, useState } from 'react';
+import { TaskType } from '../constants'
 import { CreateTaskCard, TaskCard } from './TaskCard';
-import { formatSeconds, getTaskBGColor, groupByWeekDays } from '../utilFunctions';
+import { formatSeconds, getSelectedWeek, getTaskBGColor, getWeekDays, groupByWeekDays } from '../utilFunctions';
 import { useDashboardStore } from '../model/context';
 import { updateTaskDate, updateTaskStatus } from '../../../controllers/tasks';
 import { useTheme } from '@styles/Theme';
-import { GiEmptyHourglass } from 'react-icons/gi';
+import { Calender } from '@components/Calender';
+import moment from 'moment';
 
 
 
@@ -24,14 +25,14 @@ let Today = () => {
     {
       title: "Start working",
       onDrop: (task) => {
-        try{
+        try {
 
-          dashboardStore.methods.setTasks((prev)=> {
-            return prev?.map((i)=>{
-              if(i.taskId == task.taskId){
+          dashboardStore.methods.setTasks((prev) => {
+            return prev?.map((i) => {
+              if (i.taskId == task.taskId) {
                 return {
                   ...i,
-                  taskStatus:"In Progress"
+                  taskStatus: "In Progress"
                 }
               }
               return i
@@ -39,7 +40,7 @@ let Today = () => {
           })
           updateTaskStatus(task.taskId, "In Progress")
           return true
-        }catch(e){
+        } catch (e) {
           console.log(e)
         }
       }
@@ -57,7 +58,7 @@ let Today = () => {
         return false
       }
     },
-  
+
     {
       title: "I have completed the task!!",
       onDrop: (task) => {
@@ -78,9 +79,7 @@ let Today = () => {
         <div className='flex justify-center items-center w-full h-full'>
           <img />
           <div>
-            <p>
-              No Tasks For Today
-            </p>
+            <CreateTaskCard task={{taskDeadlineDate:new Date().toISOString()}} onClickAddTask={() => {}} />
           </div>
         </div>
       </>
@@ -90,43 +89,54 @@ let Today = () => {
       <div>
         <div className='w-3/12 my-4' >
 
-        <CreateTaskCard />
+          <CreateTaskCard task={{taskDeadlineDate:new Date().toISOString()}} onClickAddTask={() => {}} />
         </div>
-      <div className='grid grid-cols-4 gap-2 h-max  w-full '>
-        {
-          todaysTasks.map(task => <div className='grow-0' draggable><TaskCard key={task.taskId} task={task} dragActions={dragActions} /></div>)
-        }
-      </div>
+        <div className='grid grid-cols-4 gap-2 h-max  w-full '>
+          {
+            todaysTasks.map(task => <div className='grow-0' draggable><TaskCard key={task.taskId} task={task} dragActions={dragActions} /></div>)
+          }
+        </div>
       </div>
 
     }
   </>
 }
 
-let Week = () => {
-  let {theme} = useTheme();
+type WeekDaysType = { name: string, date: Date }
+
+let Week = ({ filter }: { filter: { startDate: Date, endDate: Date } }) => {
+  let { theme } = useTheme();
   let dashboardStore = useDashboardStore();
-  let tasks = dashboardStore.state.tasks
-  const [hoveredContainer, setHoveredContainer] = useState(null)
-  const [tasksByDay, setTasksByDay] = useState<{[key:string]:TaskType[]}>({})
-  const [weekDays, setweekDays] = useState<Object[]>([])
+
+  let tasks = useMemo(() => dashboardStore.state.tasks.filter((task) => {
+   
+    let taskDate = moment(task.taskDeadlineDate)
+    if (taskDate.isSameOrAfter(moment(filter.startDate)) && taskDate.isSameOrBefore(moment(filter.endDate))) {
+      return true
+    }
+  }), [filter, dashboardStore.state.tasks])
+const [addTask, setAddTask] = useState<TaskType|null>(null)
+  const [hoveredContainer, setHoveredContainer] = useState<string | null>(null)
+  const [tasksByDay, setTasksByDay] = useState<{ [key: string]: TaskType[] }>({})
+  const [weekDays, setweekDays] = useState<WeekDaysType[]>([])
   const getTasksByDay = (tasks: TaskType[]) => {
-    return groupByWeekDays(tasks)
+    return groupByWeekDays(tasks, filter.startDate, filter.endDate)
   };
+
   let handleDragMethods = {
 
     onDragEnter: (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault()
       setHoveredContainer(e.currentTarget.id)
     },
-    onDragLeave: (e: React.DragEvent<HTMLDivElement>) => {
+    onDragLeave: () => {
 
     },
     onDrop: (e: React.DragEvent<HTMLDivElement>) => {
 
       let targetDate = e.currentTarget.dataset.date
       let srcTask: TaskType = JSON.parse(e.dataTransfer.getData("task"))
-      dashboardStore.methods.setTasks((prev)=>(prev.map((task) => {
+      dashboardStore.methods.setTasks((prev) => (prev.map((task) => {
         if (task.taskId == srcTask.taskId) {
 
           return {
@@ -136,21 +146,21 @@ let Week = () => {
         }
         return task
       })));
-      updateTaskDate(srcTask.taskId, new Date(targetDate).toISOString())
+      updateTaskDate(srcTask.taskId as string, new Date(targetDate).toISOString())
     },
     onDragStart: (e: React.DragEvent<HTMLDivElement>, data: TaskType) => {
       // e.preventDefault()
       e.dataTransfer.setData("task", JSON.stringify(data))
       // e.dataTransfer.setDragImage(<img src={"/vite.svg"} />,30,30)
     },
-    onDragEnd: (e: React.DragEvent<HTMLDivElement>) => {
+    onDragEnd: () => {
       // e.preventDefault()
       setHoveredContainer(null)
     }
   }
   useEffect(() => {
-
-    const [tasksByDay, weekDays] = getTasksByDay(tasks);
+    let weekDays: WeekDaysType[] = getWeekDays(filter.startDate, filter.endDate)
+    const [tasksByDay] = getTasksByDay(tasks);
     setTasksByDay(tasksByDay)
     setweekDays(weekDays)
   }, [tasks])
@@ -159,7 +169,7 @@ let Week = () => {
 
 
   // Priority badge component
-  const PriorityBadge = ({ priority }:{priority:string}) => {
+  const PriorityBadge = ({ priority }: { priority: string }) => {
     const colors = {
       'HIGH': 'bg-blue-600',
       'MEDIUM': 'bg-orange-600',
@@ -183,80 +193,70 @@ let Week = () => {
   };
 
   // Status indicator helper
+  let handleAddNewTask = (date:Date)=>{
+    setAddTask({taskDeadlineDate:date.toISOString()})
+  }
 
 
-
-  return <div className="grid grid-cols-5 h-full">
-    {/* Day columns */}
-    {weekDays.map((day, index) => (
+ return <div className="w-full h-full overflow-x-auto overflow-y-hidden">
+  <div className="grid gap-1 grid-cols-[repeat(7,20rem)] min-w-max h-full">
+    {weekDays.map((day) => (
       <div
         onDragEnter={handleDragMethods.onDragEnter}
         onDragLeave={handleDragMethods.onDragLeave}
         onDrop={handleDragMethods.onDrop}
         onDragEnd={handleDragMethods.onDragEnd}
         onDragOver={(e) => e.preventDefault()}
-
         data-date={day.date}
         id={day.name}
-        key={day.name} 
-        className={`h-full  flex flex-col ${hoveredContainer == day.name ? "bg-white/30" : ""}`}>
-        {/* Day header */}
-        <div className="p-2 relative  text-black font-bold text-sm">
-          
-          {day.name}
-     
-        </div>
-        {/* Column content */}
-        <div className=" overflow-auto h-90/100 ">
-          <div className='max-h-max'>
+        key={day.name}
+        className={`h-full flex flex-col ${hoveredContainer === day.name ? "bg-white/30" : ""}`}
+      >
+        {/* Header */}
+        <div className="p-2 text-black font-bold text-sm">{day.name}</div>
+      <div className='h-8/10 overflow-auto'>
 
+        {/* Create Task Section */}
+        <div className="max-h-max">
+          <CreateTaskCard task={addTask} onClickAddTask={() => handleAddNewTask(day.date)} />
+        </div>
+
+        {/* Tasks */}
+        <div className="overflow-y-auto grow min-h-0">
           {tasksByDay[day.name]?.map((task, taskIndex) => (
             <div
               draggable
               data-task={JSON.stringify(task)}
               onDragStart={(e) => handleDragMethods.onDragStart(e, task)}
               key={`${day.name}-${taskIndex}`}
-              className={`rounded-lg p-3 m-2 ${getTaskBGColor(task.taskPriority)}`}
+              className="rounded-lg h-40 mt-1 bg-black/80 flex flex-row overflow-hidden"
             >
-              <PriorityBadge priority={task.taskPriority} />
-              <h3 className="font-medium mt-1">{task.taskName}</h3>
-              <p className="text-xs text-gray-400 mt-1">{task.taskDescription}</p>
-              <div className="flex items-center justify-between mt-4">
-
-                <div className="flex items-center gap-2 text-xs" style={{
-                  color:theme["text-color"]
-                }}>
-                  <div className="flex items-center">
-                    <span className="text-sm mr-1">⏱</span> {formatSeconds(task.taskTimeSpentInSeconds as number)??"Not Started"}
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm mr-1">💬</span> 3
+              <div className={`w-3 h-full ${getTaskBGColor(task.taskPriority)}`} />
+              <div className="p-2">
+                <PriorityBadge priority={task.taskPriority} />
+                <h3 className="font-medium mt-1">{task.taskName}</h3>
+                <p className="text-xs text-gray-400 mt-1">{task.taskDescription}</p>
+                <div className="flex items-center justify-between mt-4 text-xs text-gray-200">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center">
+                      <span className="text-sm mr-1">⏱</span>
+                      {formatSeconds(task.taskTimeSpentInSeconds as number) ?? "Not Started"}
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-sm mr-1">💬</span>3
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-
-          {/* Empty state for days with no tasks */}
-          {(!tasksByDay[day.name] || tasksByDay[day.name].length === 0) && (
-            <div className="p-3 m-2 rounded-lg  flex flex-col items-center justify-center  text-sm h-32" style={{
-              backgroundColor:theme["bg-layer-2"],
-              color:theme["text-color"]
-            }}>
-             <GiEmptyHourglass className='mb-2 text-lg leftRightShake'/> 
-             
-             <div>
-               No tasks scheduled
-               </div>
-            </div>
-          )}
-
-          {/* Add a "Brake time" slot for each day as in original */}
-</div>
+        </div>
         </div>
       </div>
     ))}
   </div>
+</div>
+
 }
 
 
@@ -264,6 +264,23 @@ let Week = () => {
 
 const TaskOverview = () => {
   const [timeFilter, setTimeFilter] = useState('Today');
+  const [weekFilter, setWeekFilter] = useState({ startDate: new Date(), endDate: new Date() })
+  let handleWeekChange = (obj: { startDate: Date, endDate: Date }) => {
+    setWeekFilter(obj)
+
+  }
+  useEffect(() => {
+    setWeekFilter(getSelectedWeek(new Date()))
+  }, [])
+  let getDateSpan = (ref)=>{
+    if(ref == "Today"){
+      return 1
+    }
+    if(ref == "Week"){
+      return 7
+    }
+    return 31
+  }
   return (
     <div className="bg-white/30 backdrop-blur-xs text-white h-6/8 overflow-hidden p-4 rounded-2xl mt-8 mr-4">
       {/* Header section */}
@@ -272,18 +289,23 @@ const TaskOverview = () => {
           {/* <h1 className="text-2xl font-semibold"></h1> */}
           {/* <button className="flex items-center gap-2 bg-gray-900 px-3 py-1 rounded-md text-sm"> */}
           <span className="text-lg">⚙</span> Filter
+          
           {/* </button> */}
         </div>
 
         <div className="flex bg-gray-900 rounded-full overflow-hidden">
-          {['Today', 'Week', 'Month', 'Year'].map(filter => (
+          
+          {['Today', 'Week'].map(filter => (
+            <>
             <button
               key={filter}
-              className={`px-4 py-1 text-sm ${timeFilter === filter ? 'bg-gray-700 text-white' : 'text-gray-400'}`}
+              className={`flex flex-row justify-center items-center px-4 py-1 text-sm ${timeFilter === filter ? 'bg-gray-700 text-white' : 'text-gray-400'}`}
               onClick={() => setTimeFilter(filter)}
-            >
-              {filter}
+              >
+              {timeFilter == "Week"&& filter == "Week" && <Calender onClick={handleWeekChange} value={weekFilter} span={getDateSpan(timeFilter)} />}
+              <p className='ml-2'>{filter}</p>
             </button>
+              </>
           ))}
         </div>
       </div>
@@ -291,9 +313,9 @@ const TaskOverview = () => {
       {/* Calendar grid */}
       <div className='h-90/100 overflow-hidden'>
 
-        {timeFilter == "Week" && <Week />}
+        {timeFilter == "Week" && <Week filter={weekFilter} />}
         {
-          timeFilter == "Today" && <Today  />
+          timeFilter == "Today" && <Today />
         }
       </div>
 

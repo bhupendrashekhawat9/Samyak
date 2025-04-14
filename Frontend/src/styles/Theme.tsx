@@ -8,6 +8,10 @@ const ThemeContext = createContext({
     "bg-layer-2": "#f9f9f9",
     "bg-layer-3": "#f0f0f0",
     "bg-color": "#ffffff",
+    "layer-1":"bg-black-10",
+    "layer-2":"bg-black-80",
+    "layer-3":"bg-black-90",
+    "highlight":"#16FF00",
     "text-color": "#000000",
     "border-color": "#cccccc",
     "hover-color": "#e0e0e0",
@@ -36,7 +40,7 @@ const ThemeContext = createContext({
 });
 
 // Theme provider component
-export const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }:{children:React.ReactNode}) => {
   // Check for saved theme preference or use system preference
   const getSavedTheme = () => {
     const savedTheme = localStorage.getItem('theme');
@@ -60,6 +64,11 @@ export const ThemeProvider = ({ children }) => {
     "bg-layer-2": "#1e1e1e",
     "bg-layer-3": "#2a2a2a",
     "bg-color": "#1a1a1a",
+    "layer-1":"bg-black-10",
+    "layer-2":"bg-black-80",
+    "layer-3":"bg-black-90",
+    "highlight":"#16FF00",
+
     "text-color": "#ffffff",
     "border-color": "#333333",
     "hover-color": "#444444",
@@ -89,6 +98,11 @@ export const ThemeProvider = ({ children }) => {
     "bg-layer-2": "#f9f9f9",
     "bg-layer-3": "#f0f0f0",
     "bg-color": "#f0f0f0",
+    "highlight":"#16FF00",
+
+    "layer-1":"bg-black-10",
+    "layer-2":"bg-black-80",
+    "layer-3":"bg-black-90",
     "text-color": "#000000",
     "border-color": "#cccccc",
     "hover-color": "#e0e0e0",

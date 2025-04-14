@@ -1,11 +1,10 @@
 import React from 'react'
-import { TASK_DATA } from '../constants';
-import { useTaskDragAction } from '@components/TaskDragAction';
+import { TASK_DATA, TaskType } from '../constants';
 import { TaskCard } from './TaskCard';
 import { useDashboardStore } from '../model/context';
 import { updateTask, updateTaskDate } from '@controllers/tasks';
 import { useTheme } from '@styles/Theme';
-import { BsActivity, BsListTask } from 'react-icons/bs';
+import { BsListTask } from 'react-icons/bs';
 
 
 
@@ -32,7 +31,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 
 // Task section component
-const TaskSection = ({ title, tasks, emptyMessage }) => {
+const TaskSection = ({  tasks, emptyMessage }: {tasks:TaskType[], emptyMessage:string, title?:string}) => {
 
   let dragActions = [
     {
@@ -56,7 +55,7 @@ const TaskSection = ({ title, tasks, emptyMessage }) => {
 
   return <div className="flex flex-col gap-1 w-full ">
     {tasks.length > 0 ? (
-      tasks.map(task => <TaskCard key={task.id} task={task} dragActions={dragActions} />)
+      tasks.map(task => <TaskCard key={task.taskId} task={task} dragActions={dragActions} />)
     ) : (
       <p className="text-gray-500 text-center py-4">{emptyMessage}</p>
     )}
