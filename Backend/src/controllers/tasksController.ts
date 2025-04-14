@@ -2,6 +2,7 @@
 import type { Request, Response } from "express";
 import { saveTask,fetchAllTasks, getSingleTask, updateTask, deleteTask } from "../database/models/TasksModel.js";
 import type { TaskType } from "../types/tasks.js";
+import { UserDetails } from "./authController.js";
 
 let taskResponse = (data:Object)=>{
     return {
@@ -32,13 +33,14 @@ export async function handleGetTaskById (req:Request,res:Response){
 export async function handleGetAllTasks (req:Request,res:Response){
 
     try{
-        let tasks = await fetchAllTasks()
+        let user  = req.user;
+        let tasks = await fetchAllTasks(user.userEmail)
         res.status(200).json({
             status: 200,
             message: "All Tasks Fetched Successfully",
             data: tasks,
         })
-        console.log("All Tasks Fetched Successfully ✅:", tasks);
+        console.log("All Tasks Fetched Successfully ✅:", user.userEmail);
     } catch (error) {
         console.error("Error Fetching All Tasks ❌:", error);
         res.status(500).json({
@@ -51,33 +53,37 @@ export async function handleGetAllTasks (req:Request,res:Response){
 export async function handleCreateTask (req:Request,res:Response){
 
     let data = req.body as TaskType;
+    let user = req.user
     try{
-        console.log("Creating Task with data:", data);
-    let response = await saveTask(data) as TaskType;
+    let response = await saveTask({
+        ...data,
+        taskCreatedBy:user.userEmail
+    }) as TaskType;
     res.status(200).json(taskResponse(response));
-
     } catch (error) {
         console.error("Error Creating Task ❌:", error);
     }
     console.log("Task Created Successfully ✅:");
-
 
 }
 export async function handleUpdateTask (req:Request,res:Response){
 
     let data = req.body as TaskType;
     let id = req.query.id as string;
+    let user  = req.user;
     try{
     console.log("Updating Task");
-    let response = await updateTask(id,data);
+
+    let response = await updateTask(id,{
+        ...data
+    });
     if(response){
         res.status(200).json(taskResponse(response));
     }else{
         res.status(500).json(taskResponse({}));
     }
     } catch (error) {
-        res.status(500).json(taskResponse({}));
-
+        res.status(500).json(taskResponse({message:error.message,status:500}));
         console.error("Error Updating Task ❌:", error);
     }
     console.log("Task Updated Successfully ✅:");

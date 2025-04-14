@@ -89,10 +89,11 @@ export let getTasks = async (id: string[]) => {
        return null;
    }
 }
-export const fetchAllTasks = async () => {
+export const fetchAllTasks = async (email?:string|undefined) => {
     await Database.connect()
    try {
-       let response = await TaskModel.find().exec();
+    let queryParam = email? {taskCreatedBy:email}:{}
+       let response = await TaskModel.find(queryParam).exec();
        console.log("All Tasks Fetched Successfully ✅:", response.map(i => i.toJSON()));
        return response ? response.map((i)=> ({...i.toJSON(  ),taskId:i.id})) : []
        } catch (error: any) {

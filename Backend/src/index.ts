@@ -3,7 +3,8 @@ import taskRouter from "./routes/taskRoutes.js"
 import cors from "cors"
 
 import userAuthRouter from "./routes/userAuthRoutes.js"
-import { AuthMiddleware } from "./controllers/authController.js"
+import { AuthMiddleware } from "./middlewares/AuthMiddleware.js"
+import notesRouter from "./routes/notesRoutes.js"
 const app = express()
 const PORT = 9000;
 let corsOptions = {
@@ -18,9 +19,11 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.use("/api/v1/userAuth",userAuthRouter)
-app.use(AuthMiddleware)
 
+app.use(AuthMiddleware)
 app.use("/api/v1/tasks",taskRouter)
+app.use("/api/v1/notes",notesRouter)
+
 
 app.listen(PORT, () => {
     console.log("Server running at "+ PORT)

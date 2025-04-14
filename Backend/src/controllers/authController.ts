@@ -6,7 +6,13 @@ import { getUserByEmail } from "../database/models/UsersAuthModel.js";
 interface UserPayload {
     userEmail: string;
     userId?: string;
-    password: string;
+    userName:string
+}
+export interface UserDetails {
+    userEmail:string;
+    userId:string;
+    userName:string;
+    token:string
 }
 
 const JWT_SECRET = process.env.JWT_SECRET||"SECRET";
@@ -17,8 +23,9 @@ if (!JWT_SECRET) {
 export const generateToken = (user: UserPayload): string => {
     return jwt.sign(
         { 
-            email: user.userEmail,
-            userId: user.userId 
+            userEmail: user.userEmail,
+            userId: user.userId,
+            userName:user.userName
         },
         JWT_SECRET,
         { expiresIn: '24h' }
@@ -29,19 +36,5 @@ export const verifyToken = (token: string): UserPayload => {
     return jwt.verify(token, JWT_SECRET) as UserPayload;
 }
 
-export const AuthMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-    const token = req.headers.authorization;
-    if(!token || !token.startsWith("Bearer ")){
-         res.status(401).json(errorResponse("Unauthorized"));
-         return;
-    }
-    try {
-        const tokenString = token.split(" ")[1];
-        const decoded = verifyToken(tokenString);
-        // req.user = decoded;
-        next();
-    } catch (error) {
-            res.status(401).json(errorResponse("Invalid token"));
-        return;
-    }
-}
+
+
