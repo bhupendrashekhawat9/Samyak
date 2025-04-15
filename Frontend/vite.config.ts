@@ -4,18 +4,16 @@ import tailwindcss from '@tailwindcss/vite'
 import path from "path"
 import tsconfigpaths from "vite-tsconfig-paths"
 console.log(path.resolve(__dirname,"src/screens"))
-// https://vite.dev/config/
+
 export default defineConfig({
   server:{
     proxy:{
       '/api/v1': "http://localhost:9000",
     }
   },
-  plugins: [react(),tailwindcss(),tsconfigpaths()],
+  plugins: [react(),tailwindcss()],
   build:{
-    rollupOptions:{
-      treeshake:true
-    }
+    outDir:"./dist"
   },
   resolve:{
     

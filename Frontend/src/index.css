@@ -4,7 +4,7 @@
 @tailwind base;
 @tailwind utilities;
 
-:root{
+/* :root{
     
     font-family: "Inter",sans-serif;
     --text-9xl:8.5rem;
@@ -16,10 +16,8 @@
     --bg-layer-3:  #f9c2ff;
     --bg-layer-4:  #f964ff;
 
-}
-*{
-    font-size: 8;
-}
+} */
+
 p{
    line-height: 1.8rem; 
    word-spacing: .1rem;
