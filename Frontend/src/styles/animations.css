@@ -16,3 +16,16 @@
     }
   }
   
+.mount{
+  animation: mount 1s ease-in-out;
+}
+
+@keyframes mount {
+    0% {
+     transform: scale(0);
+    }
+   
+    100% {
+      transform: scale(100%);
+    }
+}

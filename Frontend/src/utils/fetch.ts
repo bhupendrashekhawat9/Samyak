@@ -1,7 +1,7 @@
 
 export default class DoAjax {
     private hostUrl = "https://samyak-50pp.onrender.com/"
-    private baseUrl = this.hostUrl+"api/v1";
+    private baseUrl = "api/v1";
     private url: string;
     private header  = {
         "Content-Type": "application/json",

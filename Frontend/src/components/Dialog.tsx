@@ -1,5 +1,6 @@
 import { useTheme } from '@styles/Theme';
 import React, { useEffect } from 'react';
+import Overlay from './Overlay';
 
 interface DialogProps {
   open: boolean;
@@ -25,37 +26,12 @@ const Dialog: React.FC<DialogProps> = ({ open, onClose, children,title }) => {
 
   return (
     <div
-      className="absolute inset-0 z-100 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-100 bg-black/20 flex justify-center items-center "
       onClick={onClose}
-     
     >
-        
-      <div
-        className=""
-        onClick={(e) => e.stopPropagation()}
-        
-      >
-        <div className='flex flex-row justify-between'>
-          <div>
-            <p >
-            {title}
-            </p>
-          </div>
-        {/* Close Button */}
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 text-xl font-bold"
-            >
-            &times;
-          </button>
-        </div>
-              </div>
-
-        {/* Dialog Content */}
-        <div className="mt-2 w-max h-max">{children}</div>
+        <Overlay onClick={onClose} />
+        <div onClick={(e)=>e.stopPropagation()} className="mt-2 w-max h-max bg-black/50 min-w-1/2 rounded-lg z-102" >{children}</div>
       </div>
-    </div>
   );
 };
 

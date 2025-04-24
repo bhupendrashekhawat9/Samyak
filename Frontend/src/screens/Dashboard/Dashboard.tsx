@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { PAGE_SUBTITLE, PAGE_TITLE, TaskType } from "./constants";
-import { useTaskDragAction } from "@components/TaskDragAction";
+import { useTaskDragAction } from "@contextProviders/TaskDragAction";
 import { FcAddImage } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import WorkingTask from "./components/WorkingTask";
 import TaskOverview from "./components/TaskOverview";
 import { useDashboardStore } from "./model/context";
-import { TaskDragActionContextProps } from "@components/TaskDragAction";
+import { TaskDragActionContextProps } from "@contextProviders/TaskDragAction";
 import SideActionDrawer from "./components/SideActionDrawer";
 import { NotesEditor } from "@components/Editorjs";
 import { useTheme } from "../../styles/Theme";
@@ -16,12 +16,17 @@ import { useLoginAuth } from "@contextProviders/LoginAuthProvider";
 import { Calender } from "@components/Calender";
 import { getNotesByRefId, saveNote } from "@controllers/notesControllers";
 import { useDebounce } from "@utils/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserDetails, updateData } from "@redux/slice/users";
 
 // AI Summary component
 
 
 // Main dashboard component
 const Dashboard = () => {
+
+  let user = useSelector((state)=> state)
+  console.log(user,"user details")
   const { theme } = useTheme();
   let dashboardStore = useDashboardStore();
   let loginAuth = useLoginAuth()
@@ -55,28 +60,60 @@ const Dashboard = () => {
     let notes = await getNotesByRefId(dashboardStore.state.currentWorkingTask?.taskId ?? "")
     setNotes(notes?.noteBody ?? null)
   }
+ 
+  
+  let dispatch = useDispatch();
+let fetchUser = async()=>{
+  console.log(Date.now(),"1")
+  try{
+    await dispatch(fetchUserDetails())
+  }catch(e){
+    console.log(e)
+  }finally{
+    console.log(Date.now(),"2")
 
+  }
+
+}
+let fetchUserSync = ()=>{
+  console.log(Date.now(),"3")
+  try{
+    console.log(dispatch(updateData()),"sync")
+  }catch(e){
+    console.log(e)
+  }finally{
+    console.log(Date.now(),"4")
+
+  }
+
+}
+  useEffect(()=>{
+    fetchUser()
+    fetchUserSync()
+
+  },[])
   useEffect(() => {
     fetchNotes()
   }, [dashboardStore.state.currentWorkingTask])
   console.log(dashboardStore.state.currentWorkingTask, "notes")
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        // backgroundColor: theme["bg-layer-1"],
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundImage: `url(${getTimeBasedBackgroundImage()})`,
+    <div   style={{
+      // backgroundColor: theme["bg-layer-1"],
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundImage: `url(${getTimeBasedBackgroundImage()})`,
       
-        backgroundAttachment: "fixed",
-     
-        backgroundBlendMode: "overlay",
-        backdropFilter: "blur(10px)",
-        color: theme["text-color"],
-        
-      }}
+      backgroundAttachment: "fixed",
+  
+      backgroundBlendMode: "overlay",
+      backdropFilter: "blur(10px)",
+      color: theme["text-color"],
+    }}>
+
+    <div
+      className="min-h-screen p-4 backdrop-blur-md "
+    
     >
       <div>
 
@@ -132,16 +169,15 @@ const Dashboard = () => {
         </div>
 
         <div
-          className="w-2/10 h-full overflow-auto border-l"
-          style={{
-            backgroundColor: theme["bg-layer-2"],
-            borderColor: theme["border-color"]
-          }}
+          className="w-2/10 h-full overflow-auto "
+         
         >
           <SideActionDrawer />
         </div>
       </div>
     </div>
+    </div>
+
   );
 };
 

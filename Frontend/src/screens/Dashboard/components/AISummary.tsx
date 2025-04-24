@@ -40,11 +40,8 @@ const AISummary = () => {
   
     return (
       <div 
-        className="rounded-xl p-6 mb-6"
-        style={{
-          backgroundColor: theme["card-bg-color"],
-          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
-        }}
+        className="rounded-xl p-6 mb-6 bg-white/20"
+        
       >
         <div className="flex items-center mb-4">
           <FiActivity className="text-xl mr-2" style={{ color: theme["accent-color"] }} />
@@ -52,7 +49,7 @@ const AISummary = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme["bg-layer-1"] }}>
+          <div className="p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <FiBarChart2 className="mr-2" style={{ color: theme["accent-color"] }} />
               <h3 className="font-medium" style={{ color: theme["text-color"] }}>Productivity</h3>
@@ -63,7 +60,7 @@ const AISummary = () => {
             </div>
           </div>
           
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme["bg-layer-1"] }}>
+          <div className="p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <FiCheckSquare className="mr-2" style={{ color: theme["accent-color"] }} />
               <h3 className="font-medium" style={{ color: theme["text-color"] }}>Completion Rate</h3>
@@ -74,7 +71,7 @@ const AISummary = () => {
             </div>
           </div>
           
-          <div className="p-4 rounded-lg" style={{ backgroundColor: theme["bg-layer-1"] }}>
+          <div className="p-4 rounded-lg">
             <div className="flex items-center mb-2">
               <FiAlertCircle className="mr-2" style={{ color: theme["accent-color"] }} />
               <h3 className="font-medium" style={{ color: theme["text-color"] }}>Urgent Tasks</h3>
@@ -86,7 +83,7 @@ const AISummary = () => {
           </div>
         </div>
         
-        <div className="p-4 rounded-lg" style={{ backgroundColor: theme["bg-layer-1"] }}>
+        <div className="p-4 rounded-lg">
           <div className="flex items-center mb-3">
             <FiActivity className="mr-2" style={{ color: theme["accent-color"] }} />
             <h3 className="font-medium" style={{ color: theme["text-color"] }}>AI Recommendation</h3>

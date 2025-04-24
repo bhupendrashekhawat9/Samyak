@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TaskType } from '../constants'
 import { CreateTaskCard, TaskCard } from './TaskCard';
 import { formatSeconds, getSelectedWeek, getTaskBGColor, getWeekDays, groupByWeekDays } from '../utilFunctions';
@@ -269,6 +269,7 @@ const TaskOverview = () => {
     setWeekFilter(obj)
 
   }
+  let ref = useRef<React.RefObject<HTMLDivElement>|null>(null)
   useEffect(() => {
     setWeekFilter(getSelectedWeek(new Date()))
   }, [])
@@ -281,8 +282,9 @@ const TaskOverview = () => {
     }
     return 31
   }
+
   return (
-    <div className="bg-white/30 backdrop-blur-xs text-white h-6/8 overflow-hidden p-4 rounded-2xl mt-8 mr-4">
+    <div ref={ref} className="bg-white/30  text-white  overflow-hidden p-4 rounded-2xl mt-8 mr-4">
       {/* Header section */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         <div className="flex items-center gap-4">

@@ -1,7 +1,7 @@
-import { TaskDragAction, useTaskDragAction } from "@components/TaskDragAction";
-import { TaskDragActionContextProps } from "@components/TaskDragAction";
+import { TaskDragAction, useTaskDragAction } from "@contextProviders/TaskDragAction";
+import { TaskDragActionContextProps } from "@contextProviders/TaskDragAction";
 import { formatSeconds, getTaskBGColor } from "../utilFunctions";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import { MdCancel, MdDelete } from "react-icons/md";
@@ -9,7 +9,8 @@ import { TaskType } from "../constants";
 import { createTask, deleteTask, updateTask } from "../../../controllers/tasks";
 import { useDashboardStore } from "../model/context";
 import { useTheme } from "../../../styles/Theme"; // Import the useTheme hook
-import { Dialog, DialogContent } from "@mui/material";
+import { Menu } from "@components/Menu";
+import Dialog from "@components/Dialog";
 
 
 const PriorityBadge = ({ priority }) => {
@@ -60,15 +61,28 @@ export const TaskCard = ({ task, dragActions }: TaskCardProps) => {
   let handleDeleteTask = () => {
     dashboardStore.methods.deleteTask(task);
     deleteTask(task.taskId as string);
-  };
+  };  
+  const [isMenuOpen, setisMenuOpen] = useState(false)
 
+  let ref = useRef(null)
+  let handleCloseMenu = ()=>{
+    setisMenuOpen(false)
+  }
+  let handleOnClick = (e)=>{
+    e.preventDefault()
+    setisMenuOpen(true)
+  }
   return (
     <div
+    ref={ref}
+    onContextMenu={handleOnClick}
+     
       draggable
+      data-menuCategory="TASK"
       data-task={JSON.stringify(task)}
       onDragStart={(e) => handleDragStart(e)}
       onDragEnd={handleDragEnd}
-      className={`relative hover:cursor-pointer rounded-lg w-full min-w-60 bg-black/80 overflow-hidden flex flex-row`}
+      className={ `MENU_ELEMENT relative hover:cursor-pointer rounded-lg w-full min-w-60 bg-black/80 overflow-hidden flex flex-row`}
       style={{
         // backgroundColor: theme["card-bg-color"], // Apply theme card background color
         color: theme["card-text-color"], // Apply theme card text color
@@ -166,17 +180,17 @@ export const CreateTaskCard = ({
   }, [providedTask]);
   
   return (
-    <div className="grow-0 border-1 border-gray-600 bg-black/50 h-max rounded-lg p-4 flex flex-col gap-2">
+    <div className=" grow-0 border-1 border-gray-600 text-white h-max rounded-lg p-4 flex flex-col gap-2">
       {/* Create new task card */}
       <div className="flex flex-col justify-center items-center gap-2 h-full">
         {openEdit && (
-          <Dialog maxWidth="lg" fullWidth  open={openEdit} onClose={handleClose} title="Create Task">
+          <Dialog   open={openEdit} onClose={handleClose} title="Create Task" >
             
 
             <div className="flex flex-col gap-4 w-full p-8">
               {/* Task name input */}
               <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400">Task Name</label>
+                <label className="text-sm ">Task Name</label>
                 <input
                   type="text"
                   name="taskName"
@@ -189,7 +203,7 @@ export const CreateTaskCard = ({
               
               {/* Task description textarea */}
               <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400">Task Description</label>
+                <label className="text-sm ">Task Description</label>
                 <textarea
                   name="taskDescription"
                   placeholder="Enter task description"
@@ -202,7 +216,7 @@ export const CreateTaskCard = ({
               
               {/* Priority selector */}
               <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400">Priority</label>
+                <label className="text-sm ">Priority</label>
                 <select
                   name="taskPriority"
                   value={task.taskPriority}
@@ -217,7 +231,7 @@ export const CreateTaskCard = ({
               
               {/* Category selector */}
               <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400">Category</label>
+                <label className="text-sm ">Category</label>
                 <select
                   name="taskCategory"
                   value={task.taskCategory}
@@ -233,7 +247,7 @@ export const CreateTaskCard = ({
               
               {/* Deadline date */}
             {!providedTask.taskDeadlineDate ? <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400">Deadline</label>
+                <label className="text-sm ">Deadline</label>
                 <input
                   type="date"
                   name="taskDeadlineDate"
@@ -242,8 +256,8 @@ export const CreateTaskCard = ({
                   className=" p-2 rounded-md border border-gray-700 focus:border-gray-500 focus:outline-none w-full"
                 />
               </div> : <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-400"></label>
-                <p className="text-sm text-gray-400"></p>
+                <label className="text-sm "></label>
+                <p className="text-sm "></p>
               </div>}
               
               {/* Action buttons */}

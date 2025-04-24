@@ -21,7 +21,7 @@ const SideActionDrawer = () => {
       // }
       if (dashboardStore.state.isNotesVisible) {
             return (
-                <div className="w-full h-screen bg-black rounded-lg p-4">
+                <div className="w-full h-screen rounded-lg p-4">
                
                     <TodaysTasks/>
                 
@@ -33,7 +33,7 @@ const SideActionDrawer = () => {
        
     }
   return (
-    <div>
+    <div className='bg-white/10 min-h-full'>
       <AISummary />
       {/* <VoiceAssistant/> */}
        {

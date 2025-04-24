@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { TaskType } from '../constants'
 import { useDashboardStore } from '../model/context'
-import { TaskDragActionContextProps, useTaskDragAction } from '@components/TaskDragAction';
+import { TaskDragActionContextProps, useTaskDragAction } from '@contextProviders/TaskDragAction';
 import { formatDate, getPriorityColor, getStatusColor } from '../utilFunctions';
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { deleteTask, updateTask, updateTaskDate, updateTaskStatus } from '../../../controllers/tasks';
@@ -73,7 +73,7 @@ const ViewTask = ({task, timer}: {task: TaskType, timer: number}) => {
     }
     dashboardStore.methods.openTaskNotes()
   }
-  console.log(theme,"theme")
+  
   let handleContinueLater = () => {
     
     dashboardStore.methods.setCurrentTask(null)

@@ -43,12 +43,12 @@ let navigate = useNavigate()
 
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen  py-8 text-black">
       <div className=" mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-t-xl shadow-sm p-6 border-b">
+        <div className=" rounded-t-xl shadow-sm p-6 border-b">
           <h1 className="text-2xl font-bold text-gray-800">Create New Task</h1>
-          <p className="text-gray-500 mt-1">Fill in the details below to create a new task</p>
+          <p className=" mt-1">Fill in the details below to create a new task</p>
         </div>
         
         {/* Main Form */}
@@ -57,7 +57,7 @@ let navigate = useNavigate()
             <div className="w-1/2 flex gap-8 flex-col">
             {/* Task Title */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="title" className="block text-sm font-medium mb-1">
                 Task Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -67,14 +67,14 @@ let navigate = useNavigate()
                 required
                 value={taskData.title}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border bg-black/30 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter task title"
               />
             </div>
             
             {/* Task Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium mb-1">
                 Description
               </label>
               <textarea
@@ -91,7 +91,7 @@ let navigate = useNavigate()
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Due Date */}
               <div>
-                <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="dueDate" className="block text-sm font-medium mb-1">
                   Due Date <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -107,7 +107,7 @@ let navigate = useNavigate()
               
               {/* Priority */}
               <div>
-                <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="priority" className="block text-sm font-medium mb-1">
                   Priority
                 </label>
                 <select
@@ -127,7 +127,7 @@ let navigate = useNavigate()
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Status */}
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="status" className="block text-sm font-medium mb-1">
                   Status
                 </label>
                 <select
@@ -145,7 +145,7 @@ let navigate = useNavigate()
               
               {/* Parent Reference ID */}
               <div>
-                <label htmlFor="parentRefId" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="parentRefId" className="block text-sm font-medium mb-1">
                   Parent Task ID
                 </label>
                 <input
@@ -177,7 +177,7 @@ let navigate = useNavigate()
             <div className="flex justify-end space-x-3 border-t mt-4">
               <button
                 type="button"
-                className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50"
+                className="px-6 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50"
               >
                 Cancel
               </button>

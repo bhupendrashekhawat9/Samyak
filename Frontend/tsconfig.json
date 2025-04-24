@@ -20,6 +20,7 @@
           "@utils/*":["src/utils/*"],
           "@controllers/*":["src/controllers/*"],
           "@contextProviders/*":["src/contextProviders/*"],
+          "@redux/*":["src/redux/*"]
         },
 
     /* Bundler mode */

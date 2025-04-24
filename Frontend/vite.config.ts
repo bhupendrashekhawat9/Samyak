@@ -26,6 +26,8 @@ export default defineConfig({
       "@utils": path.resolve(__dirname,"src/utils"),
       "@controllers": path.resolve(__dirname,"src/controllers"),
       "@contextProviders": path.resolve(__dirname,"src/contextProviders"),
+      "@redux": path.resolve(__dirname,"src/redux"),
+
     }
   }
 })

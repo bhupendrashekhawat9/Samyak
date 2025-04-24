@@ -17,7 +17,9 @@
     --bg-layer-4:  #f964ff;
 
 } */
-
+*{
+    box-sizing: border-box;
+}
 p{
    line-height: 1.8rem; 
    word-spacing: .1rem;
