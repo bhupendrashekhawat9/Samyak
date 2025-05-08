@@ -1,25 +1,29 @@
-# Samyak
-YuktiYojana is a goal and task tracking application helping user to achieve there goals by breaking them into smaller goals and tasks. 
-# Samyak – Intelligent Goal Planning & Tracking
+# SideBrain  
+SideBrain is a modern planning companion designed to simplify your life by helping you track goals and tasks, while also capturing anything you want to remember — from thoughts and reminders to notes and webpages — all in one place.
 
-**Samyak** is a goal-setting and task management app designed to help users systematically achieve their objectives. It provides a structured way to break down larger goals into smaller sub-goals and actionable tasks, ensuring clarity and progress tracking.
+# SideBrain – Your Second Brain for Planning & Memory
+
+**SideBrain** is a goal-setting, task management, and intelligent memory-capturing app designed to help users stay organized and focused. Along with structured goal planning, it includes a browser extension to effortlessly save notes, reminders, and content from across the web.
 
 ## ✨ Features
 
-- **Goal Creation & Breakdown** – Define high-level goals and split them into smaller, manageable sub-goals and tasks.
-- **Progress Tracking Dashboard** – View your progress for the **current day, week, and month** at a glance.
-- **Pinned Goals & Tasks** – Pin important goals and tasks to your dashboard for quick access.
-- **Priority Work Management** – Plan and track high-priority tasks for the week.
-- **Smart Insights & Analytics** – Monitor goal completion trends and optimize planning.
+- **Goal & Task Planning** – Break down high-level goals into manageable sub-goals and actionable tasks.
+- **Daily/Weekly/Monthly Dashboard** – Instantly view your progress and priorities for today, this week, and this month.
+- **Pinned Goals & Priorities** – Highlight and access important goals and tasks directly from your dashboard.
+- **Web Clipper Extension** – Save notes, reminders, and webpage content directly from your browser.
+- **Smart Insights & Analytics** – Analyze completion trends to continuously improve your planning.
 
-## 🚀 Why Samyak?
+## 🚀 Why SideBrain?
+
+- **All-in-One Memory Hub** – Store ideas, plans, notes, and webpages in a single space.
 - **Structured Planning** – Organize goals effectively with a clear hierarchy.
-- **Enhanced Focus** – Prioritize work and stay on track with pinned goals.
-- **Real-time Progress Monitoring** – Track daily, weekly, and monthly progress seamlessly.
-
+- **Enhanced Focus** – Prioritize your work and pin important goals for quicker navigation.
+- **Real-time Tracking** – Monitor progress across days, weeks, and months effortlessly.
 
 ## 📜 License
+
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-Stay organized, stay focused, and achieve your goals efficiently with YuktiYojana! 🚀
+
+Stay organized, stay focused, and remember everything that matters with **SideBrain** 🚀
