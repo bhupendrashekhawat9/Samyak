@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 class Database {
   private static instance: Database | null = null;
-  static readonly url = "mongodb+srv://bittu_10:cZpnPygiCG5w27VO@cluster0.zplqe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  static readonly url = "mongodb+srv://bittu_10:[MongoToken]@cluster0.zplqe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
   private constructor() {}
 
